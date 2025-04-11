@@ -8,7 +8,7 @@ const protect = async (req, res, next) => {
   if (token && token.startsWith("Bearer ")) {
     try {
       token = token.split(" ")[1];
-      con]st decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // Fetch user from DB
       const result = await pool.query("SELECT * FROM users WHERE id = $1", [
