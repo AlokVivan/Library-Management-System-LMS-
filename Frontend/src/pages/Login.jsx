@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/Login.css";
-import { FaUser, FaLock, FaEnvelope } from "react-icons/fa"; // react-icons imported
+import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,13 +18,14 @@ const Login = () => {
 
     try {
       if (isLogin) {
-        const res = await axios.post("http://localhost:5000/api/login", {
+        const res = await axios.post("http://localhost:5000/api/auth/login", {
           email,
           password,
         });
 
-        const { token, role } = res.data;
+        const { token, role, user } = res.data;
         localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
 
         if (role === "admin") {
           navigate("/admin/dashboard");
@@ -32,7 +33,7 @@ const Login = () => {
           navigate("/student/dashboard");
         }
       } else {
-        await axios.post("http://localhost:5000/api/register", {
+        await axios.post("http://localhost:5000/api/auth/register", {
           name,
           email,
           password,
@@ -42,7 +43,7 @@ const Login = () => {
         setIsLogin(true);
       }
     } catch (error) {
-      alert("Error: " + error.response?.data?.message || error.message);
+      alert("Error: " + (error.response?.data?.error || error.message));
     }
   };
 
@@ -99,7 +100,9 @@ const Login = () => {
 
             <div className="register">
               <p>
-                {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+                {isLogin
+                  ? "Don't have an account?"
+                  : "Already have an account?"}{" "}
                 <a href="#" onClick={() => setIsLogin(!isLogin)}>
                   {isLogin ? "Register" : "Login"}
                 </a>
