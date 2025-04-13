@@ -1,17 +1,25 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
-import StudentDashboard from './pages/StudentDashboard';
-import AdminDashboard from './pages/AdminDashboard';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import AdminPanel from "./pages/AdminPanel";
+import Dashboard from "./pages/admin/Dashboard";
+import Books from "./pages/admin/Books";
+import Users from "./pages/admin/Users";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/student" element={<StudentDashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/Login" element={<Login />}></Route>
+
+      <Route path="/admin" element={<AdminPanel />}>
+        <Route index element={<Dashboard />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="books" element={<Books />} />
+        <Route path="users" element={<Users />} />
+      </Route>
+    </Routes>
   );
 }
 

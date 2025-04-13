@@ -1,60 +1,114 @@
-import { useState } from "react";
-import axios from "axios";
+// src/pages/Login.jsx
+
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../styles/Login.css";
+import { FaUser, FaLock, FaEnvelope } from "react-icons/fa"; // react-icons imported
 
 const Login = () => {
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
-        password,
-      });
+      if (isLogin) {
+        const res = await axios.post("http://localhost:5000/api/login", {
+          email,
+          password,
+        });
 
-      const { token, role } = res.data;
+        const { token, role } = res.data;
+        localStorage.setItem("token", token);
 
-      // Token save in localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
+        if (role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/student/dashboard");
+        }
+      } else {
+        await axios.post("http://localhost:5000/api/register", {
+          name,
+          email,
+          password,
+        });
 
-      // Redirect based on role
-      if (role === "student") {
-        navigate("/student");
-      } else if (role === "admin") {
-        navigate("/admin");
+        alert("Registration successful! Please login.");
+        setIsLogin(true);
       }
-    } catch (err) {
-      console.error(err);
-      alert("Login failed!");
+    } catch (error) {
+      alert("Error: " + error.response?.data?.message || error.message);
     }
   };
 
   return (
-    <div className="login-container" style={{ padding: "20px" }}>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        /><br /><br />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        /><br /><br />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <section>
+      <div className="form-box">
+        <div className="form-value">
+          <form onSubmit={handleSubmit}>
+            <h2>{isLogin ? "Student Login" : "Student Register"}</h2>
+
+            {!isLogin && (
+              <div className="inputbox">
+                <FaUser className="react-icon" />
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <label>Name</label>
+              </div>
+            )}
+
+            <div className="inputbox">
+              <FaEnvelope className="react-icon" />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <label>Email</label>
+            </div>
+
+            <div className="inputbox">
+              <FaLock className="react-icon" />
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <label>Password</label>
+            </div>
+
+            <div className="forget">
+              <label>
+                <input type="checkbox" /> Remember Me
+              </label>
+              <a href="#">Forgot Password?</a>
+            </div>
+
+            <button type="submit">{isLogin ? "Log in" : "Register"}</button>
+
+            <div className="register">
+              <p>
+                {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+                <a href="#" onClick={() => setIsLogin(!isLogin)}>
+                  {isLogin ? "Register" : "Login"}
+                </a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
   );
 };
 
