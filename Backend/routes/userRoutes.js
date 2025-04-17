@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 const { pool } = require("../config/db");
 const bcrypt = require("bcryptjs");
-const { protect, isAdmin } = require("../middleware/authMiddleware"); // ✅ Correct import
+const { protect, isAdmin } = require("../middleware/authMiddleware");
+const { getUserProfile } = require("../controllers/userController");
 
 // ✅ GET all users (Admin only)
-router.get("/", isAdmin, async (req, res) => {
+router.get("/", protect, isAdmin, async (req, res) => {
   try {
     const result = await pool.query("SELECT id, name, email, role FROM users");
     res.json(result.rows);
@@ -15,20 +16,8 @@ router.get("/", isAdmin, async (req, res) => {
   }
 });
 
-// ✅ GET current user profile
-router.get("/me", protect, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const result = await pool.query(
-      "SELECT id, name, email, role FROM users WHERE id = $1",
-      [userId]
-    );
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error("Error fetching user:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
+// ✅ GET current user profile (Student/Admin)
+router.get("/me", protect, getUserProfile);
 
 // ✅ PUT - update user profile (name/email)
 router.put("/update-profile", protect, async (req, res) => {
@@ -72,7 +61,7 @@ router.put("/update-password", protect, async (req, res) => {
 });
 
 // ✅ PUT - update any user (Admin)
-router.put("/update/:id", isAdmin, async (req, res) => {
+router.put("/update/:id", protect, isAdmin, async (req, res) => {
   const { name, email, role } = req.body;
   const { id } = req.params;
 
@@ -89,7 +78,7 @@ router.put("/update/:id", isAdmin, async (req, res) => {
 });
 
 // ✅ DELETE - delete user (Admin)
-router.delete("/delete/:id", isAdmin, async (req, res) => {
+router.delete("/delete/:id", protect, isAdmin, async (req, res) => {
   const { id } = req.params;
   try {
     await pool.query("DELETE FROM users WHERE id = $1", [id]);

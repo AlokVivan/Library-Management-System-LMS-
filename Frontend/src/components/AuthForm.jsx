@@ -1,16 +1,18 @@
 // src/components/AuthForm.jsx
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/Login.css";
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import { MdAdminPanelSettings } from "react-icons/md";
 
 const AuthForm = ({ redirectAfterLogin = true }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [selectedRole, setSelectedRole] = useState("student");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -21,9 +23,17 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
         const res = await axios.post("http://localhost:5000/api/auth/login", {
           email,
           password,
+          role: selectedRole,
         });
 
         const { token, role, user } = res.data;
+
+        // 🔒 Role mismatch check
+        if (role !== selectedRole) {
+          alert(`You're not authorized as ${selectedRole}`);
+          return;
+        }
+
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
@@ -31,7 +41,7 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
           if (role === "admin") {
             navigate("/admin/dashboard");
           } else {
-            navigate("/student-dashboard"); // ✅ Fixed route
+            navigate("/student-dashboard");
           }
         }
       } else {
@@ -54,7 +64,7 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
       <div className="form-box">
         <div className="form-value">
           <form onSubmit={handleSubmit}>
-            <h2>{isLogin ? "Student Login" : "Student Register"}</h2>
+            <h2>{isLogin ? "Login" : "Register"}</h2>
 
             {!isLogin && (
               <div className="inputbox">
@@ -90,6 +100,20 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
               />
               <label>Password</label>
             </div>
+
+            {isLogin && (
+              <div className="inputbox">
+                <MdAdminPanelSettings className="react-icon" />
+                <select
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value)}
+                  required
+                >
+                  <option value="student">Student</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            )}
 
             <div className="forget">
               <label>

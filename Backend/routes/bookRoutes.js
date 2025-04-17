@@ -6,7 +6,8 @@ const bookController = require("../controllers/bookController");
 // ==================== Student Routes ====================
 
 // Get all books with available stock
-router.get("/available", bookController.getAllBooksWithStock);
+router.get("/available", protect, bookController.getAllBooksWithStock);
+
 
 // Get books borrowed by a student
 router.get("/borrowed", protect, bookController.getBorrowedBooksByStudent); // ✅ protected

@@ -155,3 +155,34 @@ button:hover {
 .register p a:hover {
   text-decoration: underline;
 }
+
+
+/* ... existing CSS remains same above ... */
+
+/* ✅ Add this at the bottom of your Login.css */
+
+.inputbox select {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  padding: 0 35px 0 5px;
+  color: #fff;
+  width: 100%;
+  height: 50px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.inputbox select option {
+  background-color: #1a1a1a;
+  color: #fff;
+}
+
+.inputbox select:focus ~ label,
+.inputbox select:valid ~ label {
+  top: -5px;
+  font-size: 0.85em;
+  color: #1a73e8;
+}

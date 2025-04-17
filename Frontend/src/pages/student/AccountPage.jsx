@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import "./AccountPage.css";
+
 
 const AccountPage = () => {
   const [user, setUser] = useState({ name: "", email: "" });
@@ -14,15 +16,18 @@ const AccountPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
+  
+        console.log("User info fetched:", data); // 🪵 Check this in console
+  
         setUser(data);
       } catch (err) {
         console.error("Error fetching user info:", err);
       }
     };
-    console.log("Stored Token:", localStorage.getItem("token"));
-
+  
     fetchUser();
   }, []);
+  
 
   const handlePasswordUpdate = async (e) => {
     e.preventDefault();
@@ -39,54 +44,50 @@ const AccountPage = () => {
 
       const data = await res.json();
       if (res.ok) {
-        setMessage("Password updated successfully.");
+        setMessage("✅ Password updated successfully.");
         setCurrentPassword("");
         setNewPassword("");
       } else {
-        setMessage(data.message || "Failed to update password.");
+        setMessage(data.message || "❌ Failed to update password.");
       }
     } catch (err) {
       console.error("Error updating password:", err);
-      setMessage("Something went wrong.");
+      setMessage("❌ Something went wrong.");
     }
   };
 
   return (
-    <div className="p-6 max-w-xl mx-auto bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Account Info</h2>
+    <div className="account-container">
+      <div className="account-card">
+        <h2 className="account-heading">👤 Account Info</h2>
+        <div className="user-info">
+          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+        </div>
 
-      <div className="mb-6">
-        <p><strong>Name:</strong> {user.name}</p>
-        <p><strong>Email:</strong> {user.email}</p>
+        <hr />
+
+        <h3 className="password-heading">🔒 Update Password</h3>
+        <form onSubmit={handlePasswordUpdate} className="password-form">
+          <input
+            type="password"
+            placeholder="Current Password"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="New Password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Update Password</button>
+        </form>
+
+        {message && <div className="feedback-msg">{message}</div>}
       </div>
-
-      <h3 className="text-xl font-semibold mb-2">Update Password</h3>
-      <form onSubmit={handlePasswordUpdate} className="space-y-4">
-        <input
-          type="password"
-          placeholder="Current Password"
-          className="w-full px-4 py-2 border rounded"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="New Password"
-          className="w-full px-4 py-2 border rounded"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Update Password
-        </button>
-      </form>
-
-      {message && <p className="mt-4 text-sm text-gray-700">{message}</p>}
     </div>
   );
 };

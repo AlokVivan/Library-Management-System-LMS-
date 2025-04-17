@@ -15,7 +15,6 @@ export default function Sidebar() {
             📊 Dashboard
           </NavLink>
         </li>
-        
         <li>
           <NavLink to="/admin/books" className={linkClass}>
             📚 Manage Books
@@ -27,8 +26,13 @@ export default function Sidebar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/admin/settings" className={linkClass}>
-            ⚙️ Settings
+          <NavLink to="/admin/account" className={linkClass}>
+            👤 Account
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/logout" className={linkClass}>
+            🔓 Logout
           </NavLink>
         </li>
       </ul>

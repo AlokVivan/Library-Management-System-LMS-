@@ -12,18 +12,21 @@ const ManageUsers = () => {
     role: "",
   });
 
-  // ✅ Fetch users (safe fallback structure)
-
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("/api/users");
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:5000/api/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       const data = res.data;
-  
-      console.log("Users Response:", data); // Debug line
-  
-      // Normalize data: ensure it's always an array
+
+      console.log("Users Response:", data); // Debug log
+
+      // Normalize structure
       let normalizedUsers = [];
-  
       if (Array.isArray(data)) {
         normalizedUsers = data;
       } else if (Array.isArray(data.users)) {
@@ -31,15 +34,13 @@ const ManageUsers = () => {
       } else if (Array.isArray(data.data)) {
         normalizedUsers = data.data;
       }
-  
+
       setUsers(normalizedUsers);
     } catch (err) {
       toast.error("Failed to load users");
-      setUsers([]); // Fallback to prevent .map() crash
+      setUsers([]);
     }
   };
-  
-
 
   useEffect(() => {
     fetchUsers();
@@ -66,7 +67,13 @@ const ManageUsers = () => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`/api/users/update/${editMode}`, formData);
+      const token = localStorage.getItem("token");
+      await axios.put(`http://localhost:5000/api/users/update/${editMode}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       toast.success("User updated successfully");
       fetchUsers();
       setEditMode(null);
@@ -78,7 +85,13 @@ const ManageUsers = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await axios.delete(`/api/users/delete/${id}`);
+        const token = localStorage.getItem("token");
+        await axios.delete(`http://localhost:5000/api/users/delete/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         toast.success("User deleted successfully");
         fetchUsers();
       } catch (err) {

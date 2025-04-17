@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../styles/ManageBooks.css";
 
-
 const ManageBooks = () => {
   const [books, setBooks] = useState([]);
   const [form, setForm] = useState({
@@ -16,14 +15,27 @@ const ManageBooks = () => {
   });
   const [editId, setEditId] = useState(null);
 
+  // ✅ Fetch all books with auth token
   const fetchBooks = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/books/available");
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("http://localhost:5000/api/books/available", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
       const data = await res.json();
-      setBooks(data.books);
+      setBooks(data.books || []);
     } catch (error) {
       console.error("Fetch error:", error);
       toast.error("Failed to load books.");
+      setBooks([]);
     }
   };
 
@@ -31,6 +43,7 @@ const ManageBooks = () => {
     fetchBooks();
   }, []);
 
+  // ✅ Handle add/update book with auth token
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -40,10 +53,13 @@ const ManageBooks = () => {
     const method = editId ? "PUT" : "POST";
 
     try {
+      const token = localStorage.getItem("token");
+
       const res = await fetch(apiUrl, {
         method,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...form,
@@ -70,13 +86,19 @@ const ManageBooks = () => {
     }
   };
 
+  // ✅ Handle delete with auth token
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this book?");
     if (!confirmDelete) return;
 
     try {
+      const token = localStorage.getItem("token");
+
       const res = await fetch(`http://localhost:5000/api/books/delete/${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!res.ok) throw new Error("Delete failed");
@@ -106,11 +128,41 @@ const ManageBooks = () => {
       <h2>📚 Manage Books</h2>
 
       <form onSubmit={handleSubmit} className="book-form">
-        <input type="text" placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-        <input type="text" placeholder="Author" value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} required />
-        <input type="text" placeholder="UPC" value={form.upc} onChange={(e) => setForm({ ...form, upc: e.target.value })} required />
-        <input type="text" placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} required />
-        <input type="number" placeholder="Quantity" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} required />
+        <input
+          type="text"
+          placeholder="Title"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Author"
+          value={form.author}
+          onChange={(e) => setForm({ ...form, author: e.target.value })}
+          required
+        />
+        <input
+          type="text"
+          placeholder="UPC"
+          value={form.upc}
+          onChange={(e) => setForm({ ...form, upc: e.target.value })}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Location"
+          value={form.location}
+          onChange={(e) => setForm({ ...form, location: e.target.value })}
+          required
+        />
+        <input
+          type="number"
+          placeholder="Quantity"
+          value={form.quantity}
+          onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+          required
+        />
 
         <div className="form-actions">
           <button type="submit">{editId ? "Update Book" : "Add Book"}</button>
@@ -148,7 +200,7 @@ const ManageBooks = () => {
             </tr>
           </thead>
           <tbody>
-            {books.map((book, idx) => (
+            {books.map((book) => (
               <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{book.author}</td>

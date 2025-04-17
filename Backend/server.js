@@ -15,7 +15,11 @@ const borrowRoutes = require("./routes/borrowRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
 app.use(express.json());
 
 // DB Connect

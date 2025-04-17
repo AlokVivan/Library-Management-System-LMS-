@@ -3,11 +3,11 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AdminDashboard from './pages/AdminDashboard';
-import Dashboard from "./pages/admin/Dashboard";
+import DashboardHome from "./pages/admin/DashboardHome";
 import StudentDashboard from './pages/StudentDashboard';
 import ManageBooks from "./pages/admin/ManageBooks";
 import ManageUsers from "./pages/admin/ManageUsers";
-import AccountPage from "./pages/student/AccountPage"; // 🔹 Create this
+import AccountPage from "./pages/student/AccountPage";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,8 +25,8 @@ function App() {
 
         {/* ✅ Admin Routes (Nested) */}
         <Route path="/admin" element={<AdminDashboard />}>
-          <Route index element={<Dashboard />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route index element={<DashboardHome />} />
+          <Route path="dashboard" element={<DashboardHome />} />
           <Route path="books" element={<ManageBooks />} />
           <Route path="users" element={<ManageUsers />} />
         </Route>
