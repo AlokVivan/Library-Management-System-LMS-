@@ -1,0 +1,137 @@
+.admin-dashboard.ui-redesign {
+    display: flex;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 240px;
+    background: linear-gradient(135deg, #2563eb, #0ea5e9);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    color: #fff;
+  }
+  
+  .logo img {
+    width: 120px;
+    height: auto;
+    margin: 0 auto 20px;
+  }
+  
+  .sidebar nav a,
+  .sidebar nav .logout-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 500;
+    transition: background 0.2s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .sidebar nav a.active,
+  .sidebar nav a:hover,
+  .sidebar nav .logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  /* Main Content */
+  .main-content {
+    flex-grow: 1;
+    padding: 32px 40px;
+    overflow-y: auto;
+    background-color: #f1f5f9;
+  }
+  
+  /* Header */
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 2px solid #cbd5e1;
+  }
+  
+  /* Section Title */
+  main h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  /* Search Input */
+  input[type="text"] {
+    border: 1px solid #cbd5e1;
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 400px;
+    font-size: 14px;
+    background-color: #ffffff;
+  }
+  
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  th {
+    background-color: #f1f5f9;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  
+  td {
+    color: #475569;
+  }
+  
+  td:last-child,
+  th:last-child {
+    text-align: right;
+  }
+  
+  /* No books found */
+  table td[colspan="3"] {
+    text-align: center;
+    font-style: italic;
+    color: #94a3b8;
+  }
+  

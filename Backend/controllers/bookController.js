@@ -38,3 +38,49 @@ exports.getAllBooksWithStock = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+// ✅ Admin: Add new book
+exports.addBook = async (req, res) => {
+  const { title, author, upc, location, quantity } = req.body;
+  try {
+    const result = await pool.query(
+      `INSERT INTO books (title, author, upc, location, quantity)
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [title, author, upc, location, quantity]
+    );
+    res.status(201).json({ book: result.rows[0] });
+  } catch (error) {
+    console.error("Add book error:", error.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// ✅ Admin: Update book
+exports.updateBook = async (req, res) => {
+  const { id } = req.params;
+  const { title, author, upc, location, quantity } = req.body;
+  try {
+    const result = await pool.query(
+      `UPDATE books
+       SET title = $1, author = $2, upc = $3, location = $4, quantity = $5
+       WHERE id = $6 RETURNING *`,
+      [title, author, upc, location, quantity, id]
+    );
+    res.json({ book: result.rows[0] });
+  } catch (error) {
+    console.error("Update book error:", error.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// ✅ Admin: Delete book
+exports.deleteBook = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query(`DELETE FROM books WHERE id = $1`, [id]);
+    res.json({ message: "Book deleted successfully" });
+  } catch (error) {
+    console.error("Delete book error:", error.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};

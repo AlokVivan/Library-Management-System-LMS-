@@ -1,4 +1,3 @@
-// Backend/config/db.js
 const { Pool } = require("pg");
 const dotenv = require("dotenv");
 
@@ -18,7 +17,9 @@ const connectDB = async () => {
   }
 };
 
+// ✅ This is the important part
 module.exports = {
-  connectDB,
   pool,
+  connectDB,
+  query: (text, params) => pool.query(text, params), // 👈 this makes db.query() work
 };
