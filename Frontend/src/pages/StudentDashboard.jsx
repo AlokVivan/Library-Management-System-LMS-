@@ -145,7 +145,7 @@ const StudentDashboard = () => {
           <h1>Student Dashboard</h1>
           <div className="admin-profile">
             <span>{studentProfile.name || "Student"}</span>
-            <img src="https://i.pravatar.cc/40" alt="Student" className="profile-pic" />
+            <img src="src\assets\alokpicture.jpg" alt="Student" className="profile-pic" />
           </div>
         </header>
 

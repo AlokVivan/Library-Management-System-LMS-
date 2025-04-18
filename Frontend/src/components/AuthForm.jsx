@@ -1,4 +1,3 @@
-// src/components/AuthForm.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -28,7 +27,6 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
 
         const { token, role, user } = res.data;
 
-        // 🔒 Role mismatch check
         if (role !== selectedRole) {
           alert(`You're not authorized as ${selectedRole}`);
           return;
@@ -45,13 +43,17 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
           }
         }
       } else {
+        // Default role is "student"
         await axios.post("http://localhost:5000/api/auth/register", {
           name,
           email,
           password,
+          role: "student",
         });
 
-        alert("Registration successful! Please login.");
+        alert(
+          "Registration successful! Your account is pending admin approval."
+        );
         setIsLogin(true);
       }
     } catch (error) {
@@ -101,6 +103,7 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
               <label>Password</label>
             </div>
 
+            {/* ✅ Only show role dropdown on Login */}
             {isLogin && (
               <div className="inputbox">
                 <MdAdminPanelSettings className="react-icon" />

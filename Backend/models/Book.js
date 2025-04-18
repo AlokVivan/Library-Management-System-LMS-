@@ -6,9 +6,13 @@ const getTotalBooks = async () => {
 };
 
 const getBorrowedBooks = async () => {
-  const result = await db.query("SELECT COUNT(*) FROM issued_books");
+  const result = await db.query(
+    "SELECT COUNT(*) FROM borrowed_books WHERE returned_at IS NULL"
+  );
   return result.rows[0].count;
 };
+
+
 
 module.exports = {
   getTotalBooks,

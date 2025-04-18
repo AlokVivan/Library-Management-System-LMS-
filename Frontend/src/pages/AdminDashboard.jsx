@@ -6,6 +6,7 @@ import {
   Book,
   LogOut,
   UserCircle,
+  UserPlus2,
 } from "lucide-react";
 import "../styles/AdminDashboard.css";
 
@@ -15,7 +16,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/dashboard");
+        const res = await fetch("http://localhost:5000/api/dashboard/stats"); // ✅ corrected endpoint
         const data = await res.json();
         setDashboardData(data);
       } catch (err) {
@@ -33,22 +34,47 @@ const AdminDashboard = () => {
           <img src="src/assets/logo.png" alt="Logo" className="logo-img" />
         </div>
         <nav>
-  <NavLink to="/admin" end className={({ isActive }) => (isActive ? "active" : "")}>
-    <BarChart3 size={20} /> Dashboard
-  </NavLink>
-  <NavLink to="/admin/books" className={({ isActive }) => (isActive ? "active" : "")}>
-    <Book size={20} /> Manage Books
-  </NavLink>
-  <NavLink to="/admin/users" className={({ isActive }) => (isActive ? "active" : "")}>
-    <Users size={20} /> User Control
-  </NavLink>
-  <NavLink to="/admin/account" className={({ isActive }) => (isActive ? "active" : "")}>
-    <UserCircle size={20} /> Account
-  </NavLink>
-  <NavLink to="/logout" className={({ isActive }) => (isActive ? "active" : "")}>
-    <LogOut size={20} /> Logout
-  </NavLink>
-</nav>
+          <NavLink
+            to="/admin"
+            end
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <BarChart3 size={20} /> Dashboard
+          </NavLink>
+          <NavLink
+            to="/admin/books"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <Book size={20} /> Manage Books
+          </NavLink>
+          <NavLink
+            to="/admin/users"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <Users size={20} /> User Control
+          </NavLink>
+          <NavLink
+            to="/admin/account"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <UserCircle size={20} /> Account
+          </NavLink>
+          <NavLink
+            to="/admin/user-requests"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <UserPlus2 size={20} /> User Requests
+          </NavLink>
+          <button
+            onClick={() => {
+              localStorage.removeItem("token");
+              window.location.href = "/login";
+            }}
+            className="logout-button"
+          >
+            <LogOut size={20} /> Logout
+          </button>
+        </nav>
       </aside>
 
       <main className="main-content">
@@ -57,7 +83,7 @@ const AdminDashboard = () => {
           <div className="admin-profile">
             <span>Admin</span>
             <img
-              src="https://i.pravatar.cc/40"
+              src="src\assets\alokpicture.jpg"
               alt="Admin"
               className="profile-pic"
             />
@@ -65,7 +91,11 @@ const AdminDashboard = () => {
         </header>
 
         {/* 🔄 Nested Route Rendering with context */}
-        <Outlet context={{ dashboardData }} />
+        {!dashboardData ? (
+          <p style={{ padding: "1rem" }}>Loading dashboard data...</p>
+        ) : (
+          <Outlet context={{ dashboardData }} />
+        )}
       </main>
     </div>
   );

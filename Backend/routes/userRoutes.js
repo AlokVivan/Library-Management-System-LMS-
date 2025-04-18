@@ -3,23 +3,17 @@ const router = express.Router();
 const { pool } = require("../config/db");
 const bcrypt = require("bcryptjs");
 const { protect, isAdmin } = require("../middleware/authMiddleware");
-const { getUserProfile } = require("../controllers/userController");
+const {
+  getUserProfile,
+  getPendingUsers,
+  approveUser,
+  denyUser,
+} = require("../controllers/userController");
 
-// ✅ GET all users (Admin only)
-router.get("/", protect, isAdmin, async (req, res) => {
-  try {
-    const result = await pool.query("SELECT id, name, email, role FROM users");
-    res.json(result.rows);
-  } catch (err) {
-    console.error("Error fetching users:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// ✅ GET current user profile (Student/Admin)
+// ✅ Get current user's profile
 router.get("/me", protect, getUserProfile);
 
-// ✅ PUT - update user profile (name/email)
+// ✅ Update current user's profile
 router.put("/update-profile", protect, async (req, res) => {
   const userId = req.user.id;
   const { name, email } = req.body;
@@ -36,7 +30,7 @@ router.put("/update-profile", protect, async (req, res) => {
   }
 });
 
-// ✅ PUT - update password
+// ✅ Update password
 router.put("/update-password", protect, async (req, res) => {
   const userId = req.user.id;
   const { currentPassword, newPassword } = req.body;
@@ -60,7 +54,29 @@ router.put("/update-password", protect, async (req, res) => {
   }
 });
 
-// ✅ PUT - update any user (Admin)
+// ✅ Admin: Get all approved users
+router.get("/", protect, isAdmin, async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT id, name, email, role, status FROM users WHERE status = 'approved'"
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ✅ Admin: Get pending user requests (for UserRequests.jsx)
+router.get("/pending", protect, isAdmin, getPendingUsers);
+
+// ✅ Admin: Approve user request
+router.put("/approve/:id", protect, isAdmin, approveUser);
+
+// ✅ Admin: Deny (delete) user request
+router.delete("/deny/:id", protect, isAdmin, denyUser);
+
+// ✅ Admin: Update any user
 router.put("/update/:id", protect, isAdmin, async (req, res) => {
   const { name, email, role } = req.body;
   const { id } = req.params;
@@ -77,7 +93,7 @@ router.put("/update/:id", protect, isAdmin, async (req, res) => {
   }
 });
 
-// ✅ DELETE - delete user (Admin)
+// ✅ Admin: Delete user
 router.delete("/delete/:id", protect, isAdmin, async (req, res) => {
   const { id } = req.params;
   try {

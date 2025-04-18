@@ -1,0 +1,89 @@
+.admin-account-container {
+    min-height: 100vh;
+    background-color: #f9fafc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+  }
+  
+  .admin-account-card {
+    background-color: #ffffff;
+    padding: 40px 50px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    max-width: 520px;
+    width: 100%;
+  }
+  
+  .admin-account-heading {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 25px;
+    color: #1f2d3d;
+  }
+  
+  .admin-user-info {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 25px;
+  }
+  
+  .admin-user-info p {
+    margin: 10px 0;
+  }
+  
+  .admin-password-heading {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 30px 0 16px;
+    color: #333;
+  }
+  
+  .admin-password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .admin-password-form input {
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    outline: none;
+    transition: border 0.2s;
+  }
+  
+  .admin-password-form input:focus {
+    border-color: #3b82f6;
+  }
+  
+  .admin-password-form button {
+    padding: 14px;
+    background-color: #3b82f6;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .admin-password-form button:hover {
+    background-color: #2563eb;
+  }
+  
+  .admin-feedback-msg {
+    margin-top: 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background-color: #eef4ff;
+    font-size: 14px;
+    text-align: center;
+    color: #333;
+  }
+
+  

@@ -1,5 +1,6 @@
 const { pool } = require("../config/db");
 
+// Get profile of logged-in user
 const getUserProfile = async (req, res) => {
   const userId = req.user.id;
 
@@ -31,6 +32,53 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+// Get users with status 'pending'
+const getPendingUsers = async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT id, name, email FROM users WHERE status = 'pending'"
+    );
+    res.json(result.rows); // frontend expects an array
+  } catch (err) {
+    console.error("Error fetching pending users:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// Approve a pending user
+const approveUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    await pool.query(
+      "UPDATE users SET status = 'approved' WHERE id = $1",
+      [userId]
+    );
+    res.json({ message: "User approved" });
+  } catch (err) {
+    console.error("Error approving user:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// Deny (delete) a pending user
+const denyUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    await pool.query("DELETE FROM users WHERE id = $1 AND status = 'pending'", [
+      userId,
+    ]);
+    res.json({ message: "User denied and deleted" });
+  } catch (err) {
+    console.error("Error denying user:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 module.exports = {
   getUserProfile,
+  getPendingUsers,
+  approveUser,
+  denyUser,
 };

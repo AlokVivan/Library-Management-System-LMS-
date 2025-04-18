@@ -19,10 +19,13 @@ CREATE TABLE books (
 );
 
 -- Issued Books
-CREATE TABLE issued_books (
+CREATE TABLE borrowed_books (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id),
+  student_id INTEGER REFERENCES users(id),
   book_id INTEGER REFERENCES books(id),
-  issue_date DATE DEFAULT CURRENT_DATE,
-  return_date DATE
+  borrowed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  return_by TIMESTAMP,
+  returned_at TIMESTAMP,
+  due_date DATE
 );
+

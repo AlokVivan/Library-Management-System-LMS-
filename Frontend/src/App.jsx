@@ -2,19 +2,21 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import AdminDashboard from './pages/AdminDashboard';
-import DashboardHome from "./pages/admin/DashboardHome";
-import StudentDashboard from './pages/StudentDashboard';
+import UserRequests from "./pages/admin/UserRequests";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminOverview from "./pages/admin/AdminOverview"; // ✅ New Overview Component
+import StudentDashboard from "./pages/StudentDashboard";
 import ManageBooks from "./pages/admin/ManageBooks";
 import ManageUsers from "./pages/admin/ManageUsers";
-import AccountPage from "./pages/student/AccountPage";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import AccountPage from "./pages/student/AccountPage"; // Shared Account Page
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <>
       <Routes>
+        {/* ✅ Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
 
@@ -25,13 +27,16 @@ function App() {
 
         {/* ✅ Admin Routes (Nested) */}
         <Route path="/admin" element={<AdminDashboard />}>
-          <Route index element={<DashboardHome />} />
-          <Route path="dashboard" element={<DashboardHome />} />
+          <Route index element={<AdminOverview />} /> {/* ✅ Main overview */}
+          <Route path="dashboard" element={<AdminOverview />} /> {/* Optional alias */}
           <Route path="books" element={<ManageBooks />} />
           <Route path="users" element={<ManageUsers />} />
+          <Route path="user-requests" element={<UserRequests />} />
+          <Route path="account" element={<AccountPage />} />
         </Route>
       </Routes>
 
+      {/* Toast for alerts */}
       <ToastContainer position="top-right" autoClose={2000} />
     </>
   );
