@@ -62,11 +62,13 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
   };
 
   return (
+
+    
     <section className="login-section">
       <div className="form-box">
         <div className="form-value">
           <form onSubmit={handleSubmit}>
-            <h2>{isLogin ? "Login" : "Register"}</h2>
+            <h2 className="loginh2">{isLogin ? "Login" : "Register"}</h2>
 
             {!isLogin && (
               <div className="inputbox">
@@ -125,7 +127,9 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
               <a href="#">Forgot Password?</a>
             </div>
 
-            <button type="submit">{isLogin ? "Log in" : "Register"}</button>
+            <button type="submit" className="auth-button">
+  {isLogin ? "Log in" : "Register"}
+</button>
 
             <div className="register">
               <p>

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./AccountPage.css";
 
-
 const AccountPage = () => {
   const [user, setUser] = useState({ name: "", email: "" });
   const [currentPassword, setCurrentPassword] = useState("");
@@ -15,19 +14,17 @@ const AccountPage = () => {
         const res = await fetch("http://localhost:5000/api/users/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         const data = await res.json();
-  
-        console.log("User info fetched:", data); // 🪵 Check this in console
-  
-        setUser(data);
+        if (res.ok) setUser(data);
+        else console.error("Failed to fetch user");
       } catch (err) {
         console.error("Error fetching user info:", err);
       }
     };
-  
+
     fetchUser();
   }, []);
-  
 
   const handlePasswordUpdate = async (e) => {
     e.preventDefault();
@@ -43,12 +40,11 @@ const AccountPage = () => {
       });
 
       const data = await res.json();
+      setMessage(res.ok ? "✅ Password updated successfully." : data.message || "❌ Failed to update password.");
+
       if (res.ok) {
-        setMessage("✅ Password updated successfully.");
         setCurrentPassword("");
         setNewPassword("");
-      } else {
-        setMessage(data.message || "❌ Failed to update password.");
       }
     } catch (err) {
       console.error("Error updating password:", err);
