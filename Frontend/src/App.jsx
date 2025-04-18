@@ -12,6 +12,8 @@ import AccountPage from "./pages/student/AccountPage";
 import LibraryPage from "./pages/student/LibraryPage"; // ✅ Imported here
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AboutUs from './pages/AboutUs';  // correct path based on your folder structure
+
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         {/* ✅ Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/about-us" element={<AboutUs />} />
+
 
         {/* ✅ Student Routes */}
         <Route path="/student-dashboard" element={<StudentDashboard />}>

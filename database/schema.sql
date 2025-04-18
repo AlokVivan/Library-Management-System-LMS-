@@ -16,6 +16,8 @@ CREATE TABLE books (
   upc VARCHAR(100) UNIQUE NOT NULL,
   location VARCHAR(100),
   available BOOLEAN DEFAULT TRUE
+  quantity INTEGER
+
 );
 
 -- Issued Books
@@ -27,5 +29,14 @@ CREATE TABLE borrowed_books (
   return_by TIMESTAMP,
   returned_at TIMESTAMP,
   due_date DATE
+);
+
+-- Contact Messages Table
+CREATE TABLE contact_messages (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

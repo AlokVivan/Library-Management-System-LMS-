@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-import { FaHome, FaBook, FaUser, FaPhone } from 'react-icons/fa';
+import React, { useState } from "react"; 
+import { FaHome, FaUser, FaInfoCircle } from "react-icons/fa"; // changed icon
 
 export default function Navbar() {
   const [hovered, setHovered] = useState(null);
 
   const menuItems = [
-    { label: "Home", icon: <FaHome />, key: "home" },
-    { label: "Books", icon: <FaBook />, key: "books" },
-    { label: "Account", icon: <FaUser />, key: "account" },
-    { label: "Contact", icon: <FaPhone />, key: "contact" },
+    { label: "Home", icon: <FaHome />, key: "home", href: "/" },
+    { label: "Account", icon: <FaUser />, key: "account", href: "/login" },
+    { label: "About", icon: <FaInfoCircle />, key: "about", href: "/about-us" }, // ✅ Updated here
   ];
 
   return (
@@ -25,10 +24,10 @@ export default function Navbar() {
             onMouseLeave={() => setHovered(null)}
           >
             <a
-              href="#"
+              href={item.href}
               style={{
                 ...styles.menuItemAnchor,
-                transform: hovered === item.key ? "scale(1.15)" : "scale(1)",  // Increased scale value
+                transform: hovered === item.key ? "scale(1.15)" : "scale(1)",
               }}
             >
               <span style={styles.icon}>{item.icon}</span> {item.label}
@@ -48,7 +47,6 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    //borderBottom: "2px solid black",
     height: "80px",
   },
   logo: {
@@ -81,10 +79,10 @@ const styles = {
     fontFamily: "Poppins, sans-serif",
     fontWeight: 600,
     fontStyle: "normal",
-    transition: "transform 0.3s", // Only transform transition
-    display: "inline-block", // Needed for transform to work nicely
+    transition: "transform 0.3s",
+    display: "inline-block",
   },
   icon: {
     marginRight: "8px",
-  }
+  },
 };

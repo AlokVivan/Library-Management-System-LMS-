@@ -13,6 +13,7 @@ const userRoutes = require("./routes/userRoutes");
 const bookRoutes = require("./routes/bookRoutes");
 const borrowRoutes = require("./routes/borrowRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 
 // Middlewares
 app.use(cors({
@@ -31,6 +32,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/books", bookRoutes); // ✅ sirf ek hi baar
 app.use("/api/borrowed", borrowRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/contact", contactRoutes);
 
 // Basic Test Route
 app.get('/', (req, res) => {
