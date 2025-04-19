@@ -17,7 +17,7 @@ const contactRoutes = require("./routes/contactRoutes");
 
 // Middlewares
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "https://bookifylms.xyz"], // add your frontend domain
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
