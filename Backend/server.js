@@ -11,9 +11,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://bookifylms.xyz",
-  "https://bookify-alpha-two.vercel.app",
-  "https://bookify-git-main-alok-vivans-projects.vercel.app",
-  "https://bookify-alok-vivans-projects.vercel.app"
+  "https://bookify-alpha-sage.vercel.app" 
 ];
 
 app.use(cors({
