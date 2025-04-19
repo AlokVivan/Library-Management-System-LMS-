@@ -16,6 +16,8 @@ import AboutUs from './pages/AboutUs';  // correct path based on your folder str
 
 
 function App() {
+  console.log("API Base URL:", import.meta.env.VITE_API_BASE_URL);
+
   return (
     <>
       <Routes>
@@ -44,7 +46,6 @@ function App() {
 
       <ToastContainer position="top-right" autoClose={2000} />
     </>
-    console.log("API Base URL:", import.meta.env.VITE_API_BASE_URL);
 
   );
 }
