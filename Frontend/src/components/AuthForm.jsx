@@ -19,7 +19,7 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
 
     try {
       if (isLogin) {
-        const res = await axios.post("http://localhost:5000/api/auth/login", {
+        const res = await axios.post("https://bookify-0wch.onrender.com/api/auth/login", {
           email,
           password,
           role: selectedRole,
@@ -44,7 +44,7 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
         }
       } else {
         // Default role is "student"
-        await axios.post("http://localhost:5000/api/auth/register", {
+        await axios.post("https://bookify-0wch.onrender.com/api/auth/register", {
           name,
           email,
           password,
