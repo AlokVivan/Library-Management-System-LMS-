@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -9,14 +9,15 @@ import StudentDashboard from "./pages/StudentDashboard";
 import ManageBooks from "./pages/admin/ManageBooks";
 import ManageUsers from "./pages/admin/ManageUsers";
 import AccountPage from "./pages/student/AccountPage";
-import LibraryPage from "./pages/student/LibraryPage"; // ✅ Imported here
+import LibraryPage from "./pages/student/LibraryPage";
+import AboutUs from "./pages/AboutUs";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AboutUs from './pages/AboutUs';  // correct path based on your folder structure
-
 
 function App() {
-  console.log("API Base URL:", import.meta.env.VITE_API_BASE_URL);
+  useEffect(() => {
+    console.log("✅ API Base URL:", import.meta.env.VITE_API_BASE_URL);
+  }, []);
 
   return (
     <>
@@ -26,11 +27,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/about-us" element={<AboutUs />} />
 
-
         {/* ✅ Student Routes */}
         <Route path="/student-dashboard" element={<StudentDashboard />}>
           <Route path="account" element={<AccountPage />} />
-          <Route path="library" element={<LibraryPage />} /> {/* ✅ Added */}
+          <Route path="library" element={<LibraryPage />} />
         </Route>
 
         {/* ✅ Admin Routes */}
@@ -46,7 +46,6 @@ function App() {
 
       <ToastContainer position="top-right" autoClose={2000} />
     </>
-
   );
 }
 
