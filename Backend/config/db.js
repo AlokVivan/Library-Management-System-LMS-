@@ -1,22 +1,19 @@
-const { Pool } = require("pg");
+const { Client } = require("pg");
 const dotenv = require("dotenv");
-
 dotenv.config();
 
-const pool = new Pool({
+const client = new Client({
   connectionString: process.env.DATABASE_URL,
   host: 'db.xiyhqylvtqbzgmspyjpy.supabase.co',
   port: 5432,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-  statement_timeout: 5000,
+  ssl: { rejectUnauthorized: false },
+  family: 4, // 🔥 Forces IPv4 (not IPv6)
 });
 
 const connectDB = async () => {
   try {
-    await pool.connect();
-    console.log("✅ PostgreSQL Connected Successfully");
+    await client.connect();
+    console.log("✅ PostgreSQL Connected Successfully (IPv4)");
   } catch (err) {
     console.error("❌ Database Connection Error:", err);
     process.exit(1);
@@ -24,7 +21,7 @@ const connectDB = async () => {
 };
 
 module.exports = {
-  pool,
+  client,
   connectDB,
-  query: (text, params) => pool.query(text, params),
+  query: (text, params) => client.query(text, params),
 };
