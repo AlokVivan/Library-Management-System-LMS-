@@ -1,43 +1,56 @@
 import axios from "axios";
 
+// Ensure your .env file has:
+// VITE_API_BASE_URL=https://bookify-0wch.onrender.com/api
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-console.log("BASE_URL:", BASE_URL);
 
+console.log("Using API Base URL:", BASE_URL); // Verify this shows the correct URL
 
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  // Optional: If ever using cookies/sessions in future
-  // withCredentials: true,
+  timeout: 8000, // 8 second timeout
 });
 
-// Add request interceptor
+// Request interceptor
 api.interceptors.request.use(
   (config) => {
-    try {
+    // Only try to get token if localStorage is available (handles SSR)
+    if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
-    } catch (error) {
-      console.error("Token fetch error:", error);
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Optional: Add a response interceptor (for global error handling)
+// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Auto logout or redirect if 401 token expired
-    if (error.response && error.response.status === 401) {
-      console.warn("Unauthorized — possibly expired token.");
-      // localStorage.removeItem("token");
-      // window.location.href = "/login";
+    // Handle network errors differently from HTTP errors
+    if (error.code === "ECONNREFUSED") {
+      console.error("Connection refused - is the backend running?");
+    } else if (error.response) {
+      // Server responded with error status
+      console.error("API Error:", {
+        status: error.response.status,
+        data: error.response.data,
+        url: error.config.url
+      });
+      
+      if (error.response.status === 401) {
+        // Handle unauthorized (token expired)
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+        }
+      }
     }
     return Promise.reject(error);
   }
