@@ -7,17 +7,38 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  // Optional: If ever using cookies/sessions in future
+  // withCredentials: true,
 });
 
+// Add request interceptor
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error("Token fetch error:", error);
     }
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+// Optional: Add a response interceptor (for global error handling)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Auto logout or redirect if 401 token expired
+    if (error.response && error.response.status === 401) {
+      console.warn("Unauthorized — possibly expired token.");
+      // localStorage.removeItem("token");
+      // window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default api;
