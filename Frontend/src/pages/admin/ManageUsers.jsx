@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../../services/api"; // centralized axios
 import { toast } from "react-toastify";
 import "../../styles/ManageUsers.css";
 
@@ -14,16 +14,8 @@ const ManageUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const res = await API.get("/users");
       const data = res.data;
-
-      console.log("Users Response:", data); // Debug log
 
       // Normalize structure
       let normalizedUsers = [];
@@ -67,13 +59,7 @@ const ManageUsers = () => {
 
   const handleUpdate = async () => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(`http://localhost:5000/api/users/update/${editMode}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      await API.put(`/users/update/${editMode}`, formData);
       toast.success("User updated successfully");
       fetchUsers();
       setEditMode(null);
@@ -85,13 +71,7 @@ const ManageUsers = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        const token = localStorage.getItem("token");
-        await axios.delete(`http://localhost:5000/api/users/delete/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+        await API.delete(`/users/delete/${id}`);
         toast.success("User deleted successfully");
         fetchUsers();
       } catch (err) {

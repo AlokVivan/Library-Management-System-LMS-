@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
 import { LayoutDashboard, User, LogOut, Book } from "lucide-react";
-import axios from "axios";
+import api from "../services/api"; // 👈 Your Axios instance
 import "../styles/StudentDashboard.css";
 
 const StudentDashboard = () => {
@@ -18,7 +18,7 @@ const StudentDashboard = () => {
     if (!window.confirm("Are you sure you want to return this book?")) return;
 
     try {
-      await axios.put(`/api/books/return/${bookId}`, {}, {
+      await api.put(`/api/books/return/${bookId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -36,7 +36,7 @@ const StudentDashboard = () => {
 
     const fetchBorrowed = async () => {
       try {
-        const res = await axios.get("/api/books/borrowed", {
+        const res = await api.get("/api/books/borrowed", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBorrowedBooks(res.data?.borrowedBooks || []);
@@ -47,7 +47,7 @@ const StudentDashboard = () => {
 
     const fetchStudentInfo = async () => {
       try {
-        const res = await axios.get("/api/users/me", {
+        const res = await api.get("/api/users/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const { borrow_limit = 3, borrowed_books_count } = res.data;

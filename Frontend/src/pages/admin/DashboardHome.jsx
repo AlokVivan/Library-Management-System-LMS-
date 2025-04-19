@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { BookOpen, BookCopy, Users } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
+import api from "../../services/api"; // ✅ Centralized API instance
 import "../styles/DashboardHome.css";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 const DashboardHome = () => {
   const { dashboardData } = useOutletContext();
@@ -15,26 +23,18 @@ const DashboardHome = () => {
     const fetchExtraData = async () => {
       try {
         const [recentRes, overdueRes, dueRes, graphRes] = await Promise.all([
-          fetch("http://localhost:5000/api/dashboard/recent-activity"),
-          fetch("http://localhost:5000/api/dashboard/overdue"),
-          fetch("http://localhost:5000/api/dashboard/due-this-week"),
-          fetch("http://localhost:5000/api/dashboard/borrowed-graph"),
+          api.get("/dashboard/recent-activity"),
+          api.get("/dashboard/overdue"),
+          api.get("/dashboard/due-this-week"),
+          api.get("/dashboard/borrowed-graph"),
         ]);
 
-        const [recent, overdue, due, graph] = await Promise.all([
-          recentRes.json(),
-          overdueRes.json(),
-          dueRes.json(),
-          graphRes.json(),
-        ]);
+        setRecentActivity(recentRes.data);
+        setOverdueReturns(overdueRes.data);
+        setDueThisWeek(dueRes.data);
 
-        console.log("📊 Raw graph data from backend:", graph);
-
-        setRecentActivity(recent);
-        setOverdueReturns(overdue);
-        setDueThisWeek(due);
         setGraphData(
-          graph.map((item) => ({
+          graphRes.data.map((item) => ({
             month: new Date(item.month + "-01").toLocaleString("default", {
               month: "short",
             }),
@@ -99,8 +99,9 @@ const DashboardHome = () => {
             ) : (
               recentActivity.map((item, i) => (
                 <li key={i}>
-                  {item.student_name} borrowed <strong>{item.book_title}</strong>{" "}
-                  on {new Date(item.borrowed_at).toLocaleDateString()}
+                  {item.student_name} borrowed{" "}
+                  <strong>{item.book_title}</strong> on{" "}
+                  {new Date(item.borrowed_at).toLocaleDateString()}
                 </li>
               ))
             )}

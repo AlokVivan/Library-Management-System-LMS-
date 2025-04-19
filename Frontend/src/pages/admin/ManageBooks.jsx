@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../../services/api"; // ✅ centralized API
 import "../../styles/ManageBooks.css";
 
 const ManageBooks = () => {
@@ -15,23 +16,11 @@ const ManageBooks = () => {
   });
   const [editId, setEditId] = useState(null);
 
-  // ✅ Fetch all books with auth token
+  // ✅ Fetch books using centralized API
   const fetchBooks = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      const res = await fetch("http://localhost:5000/api/books/available", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-
-      const data = await res.json();
-      setBooks(data.books || []);
+      const res = await api.get("/books/available");
+      setBooks(res.data.books || []);
     } catch (error) {
       console.error("Fetch error:", error);
       toast.error("Failed to load books.");
@@ -43,33 +32,23 @@ const ManageBooks = () => {
     fetchBooks();
   }, []);
 
-  // ✅ Handle add/update book with auth token
+  // ✅ Add / Update book
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const apiUrl = editId
-      ? `http://localhost:5000/api/books/update/${editId}`
-      : "http://localhost:5000/api/books/add";
-    const method = editId ? "PUT" : "POST";
+    const payload = {
+      ...form,
+      quantity: parseInt(form.quantity, 10),
+    };
 
     try {
-      const token = localStorage.getItem("token");
-
-      const res = await fetch(apiUrl, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...form,
-          quantity: parseInt(form.quantity, 10),
-        }),
-      });
-
-      if (!res.ok) throw new Error("Failed to save book");
-
-      toast.success(editId ? "Book updated successfully!" : "Book added successfully!");
+      if (editId) {
+        await api.put(`/books/update/${editId}`, payload);
+        toast.success("Book updated successfully!");
+      } else {
+        await api.post("/books/add", payload);
+        toast.success("Book added successfully!");
+      }
 
       setForm({
         title: "",
@@ -86,23 +65,13 @@ const ManageBooks = () => {
     }
   };
 
-  // ✅ Handle delete with auth token
+  // ✅ Delete book
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this book?");
     if (!confirmDelete) return;
 
     try {
-      const token = localStorage.getItem("token");
-
-      const res = await fetch(`http://localhost:5000/api/books/delete/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) throw new Error("Delete failed");
-
+      await api.delete(`/books/delete/${id}`);
       toast.success("Book deleted successfully!");
       fetchBooks();
     } catch (error) {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./LibraryPage.css";
+import api from "../../services/api"; // path adjust kar lena agar alag structure ho
 
 const LibraryPage = () => {
   const [availableBooks, setAvailableBooks] = useState([]);
@@ -14,7 +14,7 @@ const LibraryPage = () => {
 
   const fetchAvailableBooks = async () => {
     try {
-      const res = await axios.get("/api/books/available");
+      const res = await api.get("/books/available");
       setAvailableBooks(res.data.books);
     } catch (error) {
       console.error("Error fetching available books", error);
@@ -44,21 +44,11 @@ const LibraryPage = () => {
   const handleBorrow = async () => {
     if (!confirmBorrow) return;
 
-    const token = localStorage.getItem("token");
-
     try {
-      const res = await axios.post(
-        "/api/books/borrow",
-        {
-          book_id: confirmBorrow.id,
-          return_by: "2025-04-30", // You can make this dynamic later
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await api.post("/books/borrow", {
+        book_id: confirmBorrow.id,
+        return_by: "2025-04-30", // You can make this dynamic later
+      });
 
       setMessage(`✅ Successfully borrowed: ${confirmBorrow.title}`);
       setConfirmBorrow(null);
@@ -66,7 +56,6 @@ const LibraryPage = () => {
     } catch (err) {
       console.error("Error borrowing book:", err);
 
-      // ✅ Show backend error message if available
       if (err.response && err.response.data && err.response.data.error) {
         setMessage(`❌ ${err.response.data.error}`);
       } else {
@@ -79,7 +68,6 @@ const LibraryPage = () => {
     <div className="library-wrapper">
       <h2 className="library-heading">📚 Library Catalog</h2>
 
-      {/* Modernized Search Bar with Icon */}
       <div className="library-search-bar">
         <input
           type="text"
@@ -124,7 +112,6 @@ const LibraryPage = () => {
         ))}
       </div>
 
-      {/* Borrow Confirmation Modal */}
       {confirmBorrow && (
         <div className="borrow-modal-overlay">
           <div className="borrow-modal">

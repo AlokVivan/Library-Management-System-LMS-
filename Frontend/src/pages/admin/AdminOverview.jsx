@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import api from "../../services/api"; // ✅ centralized axios instance
 
 const AdminOverview = () => {
   const { dashboardData } = useOutletContext();
@@ -13,21 +21,16 @@ const AdminOverview = () => {
     const fetchExtraData = async () => {
       try {
         const [recentRes, overdueRes, dueWeekRes, graphRes] = await Promise.all([
-          fetch("http://localhost:5000/api/dashboard/recent-activity"),
-          fetch("http://localhost:5000/api/dashboard/overdue"),
-          fetch("http://localhost:5000/api/dashboard/due-this-week"),
-          fetch("http://localhost:5000/api/dashboard/borrowed-graph"),
+          api.get("/dashboard/recent-activity"),
+          api.get("/dashboard/overdue"),
+          api.get("/dashboard/due-this-week"),
+          api.get("/dashboard/borrowed-graph"),
         ]);
 
-        const recentData = await recentRes.json();
-        const overdueData = await overdueRes.json();
-        const dueData = await dueWeekRes.json();
-        const graph = await graphRes.json();
-
-        setRecentActivity(recentData);
-        setOverdueBooks(overdueData);
-        setDueThisWeek(dueData);
-        setChartData(graph);
+        setRecentActivity(recentRes.data);
+        setOverdueBooks(overdueRes.data);
+        setDueThisWeek(dueWeekRes.data);
+        setChartData(graphRes.data);
       } catch (err) {
         console.error("Failed to fetch extra dashboard data", err);
       }

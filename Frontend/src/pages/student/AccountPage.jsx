@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./AccountPage.css";
+import api from "../../services/api"; // adjust path if needed
 
 const AccountPage = () => {
   const [user, setUser] = useState({ name: "", email: "" });
@@ -10,14 +11,8 @@ const AccountPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const data = await res.json();
-        if (res.ok) setUser(data);
-        else console.error("Failed to fetch user");
+        const res = await api.get("/users/me");
+        setUser(res.data);
       } catch (err) {
         console.error("Error fetching user info:", err);
       }
@@ -29,26 +24,19 @@ const AccountPage = () => {
   const handlePasswordUpdate = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/users/update-password", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ currentPassword, newPassword }),
+      const res = await api.put("/users/update-password", {
+        currentPassword,
+        newPassword,
       });
 
-      const data = await res.json();
-      setMessage(res.ok ? "✅ Password updated successfully." : data.message || "❌ Failed to update password.");
-
-      if (res.ok) {
-        setCurrentPassword("");
-        setNewPassword("");
-      }
+      setMessage("✅ Password updated successfully.");
+      setCurrentPassword("");
+      setNewPassword("");
     } catch (err) {
       console.error("Error updating password:", err);
-      setMessage("❌ Something went wrong.");
+      const errorMsg =
+        err.response?.data?.message || "❌ Failed to update password.";
+      setMessage(errorMsg);
     }
   };
 

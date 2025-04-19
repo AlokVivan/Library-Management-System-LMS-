@@ -10,7 +10,7 @@ const UserRequests = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get("/api/users/pending", {
+      const res = await axios.get("http://localhost:5000/api/users/pending", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -34,7 +34,7 @@ const UserRequests = () => {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        `/api/users/approve/${id}`,
+        `http://localhost:5000/api/users/approve/${id}`,
         {},
         {
           headers: {
@@ -55,7 +55,7 @@ const UserRequests = () => {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.delete(`/api/users/deny/${id}`, {
+      await axios.delete(`http://localhost:5000/api/users/deny/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -92,7 +92,7 @@ const UserRequests = () => {
                   Approve
                 </button>
                 <button className="deny-btn" onClick={() => handleDeny(user.id)}>
-                   Deny
+                  Deny
                 </button>
               </div>
             </div>

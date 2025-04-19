@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../styles/AboutUs.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import api from "../services/api"; // Axios instance
 
 export default function AboutUs() {
   const [name, setName] = useState("");
@@ -12,14 +13,9 @@ export default function AboutUs() {
     e.preventDefault();
 
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
-      });
+      const res = await api.post("/contact", { name, email, message });
 
-      const data = await res.json();
-      if (data.success) {
+      if (res.data.success) {
         alert("Message sent successfully!");
         setName("");
         setEmail("");

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import './AdminAccount.css';
+import api from "../../services/api"; // ✅ Centralized axios instance
 
 const AdminAccount = () => {
   const [adminData, setAdminData] = useState(null);
@@ -12,13 +12,7 @@ const AdminAccount = () => {
 
   const fetchAdminProfile = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/users/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const res = await api.get("/users/profile"); // ✅ token handled internally
       setAdminData(res.data);
     } catch (err) {
       toast.error("Failed to fetch admin details");
@@ -28,17 +22,7 @@ const AdminAccount = () => {
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(
-        "http://localhost:5000/api/users/update-password",
-        passwordData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await api.put("/users/update-password", passwordData); // ✅ clean and simple
       toast.success("Password updated successfully");
       setPasswordData({ currentPassword: "", newPassword: "" });
     } catch (err) {
