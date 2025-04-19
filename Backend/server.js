@@ -8,17 +8,12 @@ dotenv.config();
 const app = express();
 
 // ✅ Smart CORS for Dev + Prod
-const cors = require("cors");
-
 const allowedOrigins = [
   "http://localhost:5173",
   "https://bookifylms.xyz",
   "https://bookify-alpha-two.vercel.app",
   "https://bookify-git-main-alok-vivans-projects.vercel.app",
-  "https://bookify-alok-vivans-projects.vercel.app",
-  "https://bookify-git-main-alok-vivans-projects.vercel.app"
-
- 
+  "https://bookify-alok-vivans-projects.vercel.app"
 ];
 
 app.use(cors({
@@ -32,7 +27,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
-
 
 app.use(express.json());
 
