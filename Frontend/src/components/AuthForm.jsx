@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../styles/Login.css";
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
+import api from "../services/api"; // ✅ Use your Axios instance
 
 const AuthForm = ({ redirectAfterLogin = true }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -19,7 +19,7 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
 
     try {
       if (isLogin) {
-        const res = await axios.post("https://bookify-0wch.onrender.com/api/auth/login", {
+        const res = await api.post("/auth/login", {
           email,
           password,
           role: selectedRole,
@@ -43,17 +43,14 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
           }
         }
       } else {
-        // Default role is "student"
-        await axios.post("https://bookify-0wch.onrender.com/api/auth/register", {
+        await api.post("/auth/register", {
           name,
           email,
           password,
           role: "student",
         });
 
-        alert(
-          "Registration successful! Your account is pending admin approval."
-        );
+        alert("Registration successful! Your account is pending admin approval.");
         setIsLogin(true);
       }
     } catch (error) {
@@ -62,8 +59,6 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
   };
 
   return (
-
-    
     <section className="login-section">
       <div className="form-box">
         <div className="form-value">
@@ -105,7 +100,6 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
               <label>Password</label>
             </div>
 
-            {/* ✅ Only show role dropdown on Login */}
             {isLogin && (
               <div className="inputbox">
                 <MdAdminPanelSettings className="react-icon" />
@@ -128,8 +122,8 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
             </div>
 
             <button type="submit" className="auth-button">
-  {isLogin ? "Log in" : "Register"}
-</button>
+              {isLogin ? "Log in" : "Register"}
+            </button>
 
             <div className="register">
               <p>
