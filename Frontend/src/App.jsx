@@ -44,6 +44,8 @@ function App() {
 
       <ToastContainer position="top-right" autoClose={2000} />
     </>
+    console.log("API Base URL:", import.meta.env.VITE_API_BASE_URL);
+
   );
 }
 
