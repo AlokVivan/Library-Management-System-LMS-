@@ -5,7 +5,12 @@ dotenv.config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }, // 🔥 always enable SSL, no condition
+  host: 'db.xiyhqylvtqbzgmspyjpy.supabase.co',
+  port: 5432,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  statement_timeout: 5000,
 });
 
 const connectDB = async () => {
