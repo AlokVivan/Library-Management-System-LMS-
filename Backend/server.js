@@ -12,9 +12,9 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://bookifylms.xyz",
   "https://www.bookifylms.xyz",
-  "https://bookify-alpha-sage.vercel.app" ,
-  "https://bookifylms.netlify.app"
-
+  "https://bookify-topaz.vercel.app" ,
+  "https://bookify-git-main-alok-vivans-projects.vercel.app" ,
+  "https://bookify-alok-vivans-projects.vercel.app"
 ];
 
 app.use(cors({
