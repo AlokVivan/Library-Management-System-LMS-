@@ -1,124 +1,104 @@
-import React, { useState } from "react";
-import "../styles/AboutUs.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import React, { useState, useEffect } from "react";
+import { NavLink, Outlet } from "react-router-dom";
+import {
+  BarChart3,
+  Users,
+  Book,
+  LogOut,
+  UserCircle,
+  UserPlus2,
+} from "lucide-react";
+import "../styles/AdminDashboard.css";
 import api from "../services/api"; // ✅ Axios instance
 
-export default function AboutUs() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+const AdminDashboard = () => {
+  const [dashboardData, setDashboardData] = useState(null);
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await api.post("/contact", formData); // ✅ Axios POST
-      if (res.data.success) {
-        alert("Message sent successfully!");
-        setFormData({ name: "", email: "", message: "" });
-      } else {
-        alert("Failed to send message. Please try again.");
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const res = await api.get("/dashboard/stats"); // ✅ Axios GET
+        setDashboardData(res.data);
+      } catch (err) {
+        console.error("Failed to load dashboard data", err);
       }
-    } catch (error) {
-      console.error("Error submitting contact form:", error);
-      alert("Something went wrong. Please try again.");
-    }
-  };
+    };
+
+    fetchDashboard();
+  }, []);
 
   return (
-    <>
-      <Navbar />
+    <div className="admin-dashboard ui-redesign">
+      <aside className="sidebar">
+        <div className="logo">
+          <img src="/assets/logo.png" alt="Logo" className="logo-img" /> {/* ✅ Use public path */}
+        </div>
+        <nav>
+          <NavLink
+            to="/admin"
+            end
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <BarChart3 size={20} /> Dashboard
+          </NavLink>
+          <NavLink
+            to="/admin/books"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <Book size={20} /> Manage Books
+          </NavLink>
+          <NavLink
+            to="/admin/users"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <Users size={20} /> User Control
+          </NavLink>
+          <NavLink
+            to="/admin/account"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <UserCircle size={20} /> Account
+          </NavLink>
+          <NavLink
+            to="/admin/user-requests"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <UserPlus2 size={20} /> User Requests
+          </NavLink>
+          <button
+            onClick={() => {
+              localStorage.removeItem("token");
+              window.location.href = "/login";
+            }}
+            className="logout-button"
+          >
+            <LogOut size={20} /> Logout
+          </button>
+        </nav>
+      </aside>
 
-      <div className="aboutus-container">
-        {/* Team Section */}
-        <section className="about-section">
-          <h2 className="section-title">
-            Meet the <span>Team</span>
-          </h2>
-          <p className="section-description">
-            We’re a driven team on a mission to revolutionize learning through a seamless, modern LMS built for the future of education.
-          </p>
-
-          <div className="team-grid">
-            <div className="team-card">
-              <img src="/src/assets/aaa.jpg" alt="Founder" className="team-img" />
-              <h3>Alok Vivan</h3>
-              <p className="team-role">Founder</p>
-              <p className="team-bio">
-                The brain behind the vision — Alok leads the charge in reshaping how students connect with knowledge. With a bold strategy and a love for impactful tech, he’s building the future of learning.
-              </p>
-            </div>
-
-            <div className="team-card">
-              <img src="/src/assets/aaa.jpg" alt="Co-Founder 1" className="team-img" />
-              <h3>Ramesh Adii</h3>
-              <p className="team-role">Co-Founder</p>
-              <p className="team-bio">
-                Handles frontend design and user experience. Ramesh ensures that the platform is both beautiful and intuitive for every learner.
-              </p>
-            </div>
-
-            <div className="team-card">
-              <img src="/src/assets/aaa.jpg" alt="Co-Founder 2" className="team-img" />
-              <h3>Naman Kr</h3>
-              <p className="team-role">Co-Founder</p>
-              <p className="team-bio">
-                Backend and system architecture expert. Naman powers the engine behind the scenes for speed, security, and scalability.
-              </p>
-            </div>
+      <main className="main-content">
+        <header className="dashboard-header">
+          <h1>Bookify LMS</h1>
+          <div className="admin-profile">
+            <span>Admin</span>
+            <img
+              src="/assets/alokpicture.jpg" // ✅ Corrected image path
+              alt="Admin"
+              className="profile-pic"
+            />
           </div>
-        </section>
+        </header>
 
-        {/* Contact Section */}
-        <section className="contact-section">
-          <h2 className="section-title">
-            Get in <span>Touch</span>
-          </h2>
-          <p className="section-description">
-            Have questions, suggestions, or just want to say hi? We'd love to hear from you!
-          </p>
-
-          <form className="contact-form" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Your Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Your Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <textarea
-              name="message"
-              placeholder="Your Message"
-              rows="5"
-              value={formData.message}
-              onChange={handleChange}
-              required
-            ></textarea>
-            <button type="submit">Send Message</button>
-          </form>
-        </section>
-      </div>
-
-      <Footer />
-    </>
+        {/* 🔄 Nested Route Rendering with context */}
+        {!dashboardData ? (
+          <p style={{ padding: "1rem" }}>Loading dashboard data...</p>
+        ) : (
+          <Outlet context={{ dashboardData }} />
+        )}
+      </main>
+    </div>
   );
-}
+};
+
+export default AdminDashboard;
