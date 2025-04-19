@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
-import "./UserRequests.css"; // ← Importing modern CSS
+import api from "../../services/api"; // ← Axios instance
+import "./UserRequests.css";
 
 const UserRequests = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
 
   const fetchPendingUsers = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      const res = await axios.get("http://localhost:5000/api/users/pending", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await api.get("/users/pending");
 
       console.log("🔍 res.data =", res.data);
 
@@ -31,18 +25,7 @@ const UserRequests = () => {
 
   const handleApprove = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-
-      await axios.put(
-        `http://localhost:5000/api/users/approve/${id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await api.put(`/users/approve/${id}`);
       toast.success("User approved!");
       fetchPendingUsers();
     } catch (err) {
@@ -53,14 +36,7 @@ const UserRequests = () => {
 
   const handleDeny = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-
-      await axios.delete(`http://localhost:5000/api/users/deny/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      await api.delete(`/users/deny/${id}`);
       toast.success("User denied and removed.");
       fetchPendingUsers();
     } catch (err) {
