@@ -177,3 +177,51 @@
   background-color: #dc2626;
   transform: translateY(-1px);
 }
+
+
+/* === Summary Cards (Student Dashboard) === */
+.admin-dashboard .summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.admin-dashboard .summary-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.admin-dashboard .summary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.admin-dashboard .summary-card h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.admin-dashboard .summary-card .value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.admin-dashboard .summary-card .icon {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-size: 24px;
+  color: #cbd5e1;
+  opacity: 0.6;
+}

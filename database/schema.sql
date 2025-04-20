@@ -15,10 +15,10 @@ CREATE TABLE books (
   author VARCHAR(100),
   upc VARCHAR(100) UNIQUE NOT NULL,
   location VARCHAR(100),
-  available BOOLEAN DEFAULT TRUE
+  available BOOLEAN DEFAULT TRUE,
   quantity INTEGER
-
 );
+
 
 -- Issued Books
 CREATE TABLE borrowed_books (

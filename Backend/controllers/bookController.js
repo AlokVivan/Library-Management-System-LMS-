@@ -3,12 +3,10 @@ const { pool } = require('../config/db');
 // ===================== STUDENT =====================
 
 // ✅ Return a borrowed book
-// ✅ Return a borrowed book
 const returnBook = async (req, res) => {
-  const bookId = req.params.book_id; // ✅ Corrected key
+  const bookId = req.params.book_id;
   const userId = req.user.id;
 
-  // Optional but recommended check
   if (!bookId || isNaN(bookId)) {
     return res.status(400).json({ message: "Invalid or missing book ID." });
   }
@@ -33,10 +31,6 @@ const returnBook = async (req, res) => {
   }
 };
 
-
-
-
-
 // ✅ View borrowed books by student
 const getBorrowedBooksByStudent = async (req, res) => {
   try {
@@ -57,7 +51,6 @@ const getBorrowedBooksByStudent = async (req, res) => {
   }
 };
 
-
 // ✅ Show all books with available quantity
 const getAllBooksWithStock = async (req, res) => {
   try {
@@ -76,10 +69,10 @@ const getAllBooksWithStock = async (req, res) => {
   }
 };
 
-// ✅ Borrow a book with limit check
+// ✅ Borrow a book with limit and availability check
 const borrowBook = async (req, res) => {
   const studentId = req.user.id;
-  const { book_id, return_by } = req.body;
+  const { book_id } = req.body;
 
   try {
     // 1. Check available quantity
@@ -96,26 +89,29 @@ const borrowBook = async (req, res) => {
       return res.status(400).json({ error: "Book not available" });
     }
 
-   // 2. Check student's current active borrowed books
-const borrowCountResult = await pool.query(
-  `SELECT COUNT(*) FROM borrowed_books WHERE student_id = $1 AND returned_at IS NULL`,
-  [studentId]
-);
+    // 2. Check student's current borrowed books
+    const borrowCountResult = await pool.query(
+      `SELECT COUNT(*) FROM borrowed_books WHERE student_id = $1 AND returned_at IS NULL`,
+      [studentId]
+    );
 
-const currentBorrowedCount = parseInt(borrowCountResult.rows[0].count, 10);
+    const currentBorrowedCount = parseInt(borrowCountResult.rows[0].count, 10);
 
-// 🔄 Get dynamic borrow limit from DB
-const userResult = await pool.query(`SELECT book_limit FROM users WHERE id = $1`, [studentId]);
-const borrowLimit = userResult.rows[0]?.book_limit ?? 3; // fallback to 3
+    // Get dynamic borrow limit
+    const userResult = await pool.query(`SELECT book_limit FROM users WHERE id = $1`, [studentId]);
+    const borrowLimit = userResult.rows[0]?.book_limit ?? 3;
 
-if (currentBorrowedCount >= borrowLimit) {
-  return res.status(400).json({
-    error: `Borrow limit reached. You can borrow up to ${borrowLimit} books.`,
-  });
-}
+    if (currentBorrowedCount >= borrowLimit) {
+      return res.status(400).json({
+        error: `Borrow limit reached. You can borrow up to ${borrowLimit} books.`,
+      });
+    }
 
+    // 3. Set return_by to 7 days from now
+    const return_by = new Date();
+    return_by.setDate(return_by.getDate() + 7);
 
-    // 3. Proceed to borrow the book
+    // 4. Insert borrow record
     const borrowResult = await pool.query(
       `INSERT INTO borrowed_books (student_id, book_id, borrowed_at, return_by)
        VALUES ($1, $2, NOW(), $3) RETURNING *`,
@@ -180,14 +176,12 @@ const deleteBook = async (req, res) => {
 
 // ===================== EXPORTS =====================
 
-
 module.exports = {
   getBorrowedBooksByStudent,
   getAllBooksWithStock,
   borrowBook,
-  returnBook, // 👈 add this line
+  returnBook,
   addBook,
   updateBook,
   deleteBook,
 };
-
