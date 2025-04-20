@@ -11,7 +11,7 @@
   
   .logo-spinner {
     border-radius: 50%;
-    border: 5px solid var(--accent);
+    border: 6px solid var(--accent);
     animation: spin 1.3s linear infinite;
     object-fit: cover;
     width: 120px;

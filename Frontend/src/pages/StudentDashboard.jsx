@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
 import { LayoutDashboard, User, LogOut, Book } from "lucide-react";
-import api from "../services/api"; // Axios instance
+import api from "../services/api";
 import "../styles/StudentDashboard.css";
 import { toast } from "react-toastify";
-
+import LogoSpinner from "../components/LogoSpinner"; // ✅ Spinner imported
 
 const StudentDashboard = () => {
   const location = useLocation();
@@ -12,6 +12,7 @@ const StudentDashboard = () => {
   const [studentProfile, setStudentProfile] = useState({});
   const [limitReached, setLimitReached] = useState(false);
   const [bookLimit, setBookLimit] = useState(0);
+  const [loading, setLoading] = useState(true); // ✅ Spinner control
 
   const handleReturnBook = async (bookId) => {
     const token = localStorage.getItem("token");
@@ -57,11 +58,30 @@ const StudentDashboard = () => {
         setLimitReached(borrowed_books_count >= borrow_limit);
       } catch (err) {
         console.error("Error fetching dashboard data", err.response?.data || err.message);
+      } finally {
+        setLoading(false); // ✅ End spinner
       }
     };
 
     fetchData();
   }, []);
+
+  if (loading) {
+    return (
+      <div
+  style={{
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  }}
+>
+  <LogoSpinner size={100} />
+</div>
+
+
+    );
+  }
 
   return (
     <div className="admin-dashboard ui-redesign">
