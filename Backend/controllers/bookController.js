@@ -107,15 +107,16 @@ const borrowBook = async (req, res) => {
       });
     }
 
-    // 3. Set return_by to 7 days from now
+    // 3. Set return_by and due_date to 7 days from now
     const return_by = new Date();
     return_by.setDate(return_by.getDate() + 7);
+    const due_date = new Date(return_by);
 
     // 4. Insert borrow record
     const borrowResult = await pool.query(
-      `INSERT INTO borrowed_books (student_id, book_id, borrowed_at, return_by)
-       VALUES ($1, $2, NOW(), $3) RETURNING *`,
-      [studentId, book_id, return_by]
+      `INSERT INTO borrowed_books (student_id, book_id, borrowed_at, return_by, due_date)
+       VALUES ($1, $2, NOW(), $3, $4) RETURNING *`,
+      [studentId, book_id, return_by, due_date]
     );
 
     res.status(201).json({ message: "Book borrowed successfully", borrow: borrowResult.rows[0] });
@@ -174,6 +175,44 @@ const deleteBook = async (req, res) => {
   }
 };
 
+// ✅ Get overdue books (not returned & past due)
+const getOverdueReturns = async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT b.id AS borrow_id, u.name AS student_name, bo.title AS book_title, b.return_by
+      FROM borrowed_books b
+      JOIN users u ON b.student_id = u.id
+      JOIN books bo ON b.book_id = bo.id
+      WHERE b.returned_at IS NULL AND b.return_by < CURRENT_TIMESTAMP
+      ORDER BY b.return_by ASC
+    `);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error fetching overdue returns:", error);
+    res.status(500).json({ message: "Failed to fetch overdue returns" });
+  }
+};
+
+// ✅ Get books due in the next 7 days
+const getBooksDueThisWeek = async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT b.id AS borrow_id, u.name AS student_name, bo.title AS book_title, b.return_by
+      FROM borrowed_books b
+      JOIN users u ON b.student_id = u.id
+      JOIN books bo ON b.book_id = bo.id
+      WHERE b.returned_at IS NULL
+      AND b.return_by >= CURRENT_DATE
+      AND b.return_by < CURRENT_DATE + INTERVAL '7 days'
+      ORDER BY b.return_by ASC
+    `);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error fetching books due this week:", error);
+    res.status(500).json({ message: "Failed to fetch due books" });
+  }
+};
+
 // ===================== EXPORTS =====================
 
 module.exports = {
@@ -184,4 +223,6 @@ module.exports = {
   addBook,
   updateBook,
   deleteBook,
+  getBooksDueThisWeek,
+  getOverdueReturns
 };

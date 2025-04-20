@@ -159,16 +159,28 @@ export default function Footer() {
           color: #94a3b8;
         }
 
-        .logo {
-          font-size: 1.8rem;
-          font-weight: bold;
-          color: var(--accent);
+        .footer-logo {
+          width: 92px;
+          height: 92px;
+          border-radius: 20px;
+          object-fit: cover;
+          margin-bottom: 0.6rem;
+          border: 2px solid var(--accent);
         }
+
+        .footer-tagline {
+  font-size: 1rem;
+  font-weight: 500;
+  color:rgb(199, 224, 255);
+  margin-top: 0.3rem;
+  text-align: left;
+  text-decoration: underline; /* agar underline ya kuch chahiye ho to 'underline' likh sakta hai */
+}
 
         .desc {
           font-size: 0.95rem;
-          margin-top: 0.5rem;
           color: #cbd5e1;
+          max-width: 250px;
         }
 
         @media (max-width: 768px) {
@@ -186,13 +198,20 @@ export default function Footer() {
 
       <footer className="footer">
         <div className="footer-container">
-          {/* Logo */}
+          {/* Logo + Description */}
           <div className="footer-section">
-            <h1 className="logo">📚 Bookify</h1>
-            <p className="desc">Your digital gateway to a smarter library.</p>
+            <img
+              src="src/assets/footerlogo.png"
+              alt="Bookify Logo"
+              className="footer-logo"
+            />
+            <h2 className="footer-tagline">Book it. Track it. Love it.</h2>
+            <p className="desc">
+            Bookify – Empowering learners with seamless access to a world of knowledge. Your library, smarter, faster, and always within reach.
+            </p>
           </div>
 
-          {/* Links */}
+          {/* Quick Links */}
           <div className="footer-section">
             <h2>Quick Links</h2>
             <ul>
@@ -203,7 +222,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Navigation */}
+          {/* Back to Top */}
           <div className="footer-section right">
             <h2>Navigation</h2>
             <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>

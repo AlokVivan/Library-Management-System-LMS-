@@ -2,33 +2,36 @@ const express = require("express");
 const router = express.Router();
 const { protect, isAdmin } = require("../middleware/authMiddleware");
 const bookController = require("../controllers/bookController");
-const { authenticateUser } = require("../middleware/authMiddleware");
 
 // ==================== Student Routes ====================
 
 // Get all books with available stock
-//router.get("/available", protect, bookController.getAllBooksWithStock); protected to use only but we have to use it for student so just remove protect
-router.get("/available",  bookController.getAllBooksWithStock);
+router.get("/available", bookController.getAllBooksWithStock);
 
-router.put("/return/:book_id", protect, bookController.returnBook);//student panel borrow book return karne ke liye
+// Get books borrowed by the logged-in student
+router.get("/borrowed", protect, bookController.getBorrowedBooksByStudent);
 
+// Return a borrowed book
+router.put("/return/:book_id", protect, bookController.returnBook);
 
-// Get books borrowed by a student
-router.get("/borrowed", protect, bookController.getBorrowedBooksByStudent); // ✅ protected
+// Borrow a book
+router.post("/borrow", protect, bookController.borrowBook);
 
 // ==================== Admin Routes ====================
 
 // Add new book
-router.post("/add", protect, isAdmin, bookController.addBook); // ✅ protected + admin only
+router.post("/add", protect, isAdmin, bookController.addBook);
 
 // Update book
-router.put("/update/:id", protect, isAdmin, bookController.updateBook); // ✅ protected + admin only
+router.put("/update/:id", protect, isAdmin, bookController.updateBook);
 
 // Delete book
-router.delete("/delete/:id", protect, isAdmin, bookController.deleteBook); // ✅ protected + admin only
+router.delete("/delete/:id", protect, isAdmin, bookController.deleteBook);
 
-// Add this line in Student Routes
-router.post("/borrow", protect, bookController.borrowBook); // ✅ protected
+// NEW: Get overdue returns (for admin dashboard)
+router.get("/overdue", protect, isAdmin, bookController.getOverdueReturns);
 
+// NEW: Get books due this week (for admin dashboard)
+router.get("/due-this-week", protect, isAdmin, bookController.getBooksDueThisWeek);
 
 module.exports = router;

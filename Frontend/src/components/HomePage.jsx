@@ -5,7 +5,7 @@ const HeroSection = () => (
   <div className="hero-bg">
     <div className="hero-overlay">
       <div className="hero-content">
-        <h1 className="hero-heading">Read. Learn. Grow.</h1>
+        <h1 className="hero-heading">Book it. Track it. Love it.</h1>
         <p className="hero-subheading">
           Welcome to the future of learning — where your journey to knowledge begins.
         </p>
