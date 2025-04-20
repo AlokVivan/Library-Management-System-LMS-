@@ -54,7 +54,7 @@ export default function AboutUs() {
             </div>
 
             <div className="team-card">
-              <img src="aaa.jpg" alt="Co-Founder 1" className="team-img" />
+              <img src="rrrr.jpg" alt="Co-Founder 1" className="team-img" />
               <h3>Ramesh Adii</h3>
               <p className="team-role">Co-Founder</p>
               <p className="team-bio">
@@ -63,7 +63,7 @@ export default function AboutUs() {
             </div>
 
             <div className="team-card">
-              <img src="aaa.jpg" alt="Co-Founder 2" className="team-img" />
+              <img src="nnn.jpg" alt="Co-Founder 2" className="team-img" />
               <h3>Naman Kr</h3>
               <p className="team-role">Co-Founder</p>
               <p className="team-bio">
