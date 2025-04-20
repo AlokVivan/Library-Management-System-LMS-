@@ -4,6 +4,8 @@ import { LayoutDashboard, User, LogOut, Book } from "lucide-react";
 import api from "../services/api"; // Axios instance
 import profilePic from "../assets/alokpicture.jpg"; // ✅ Use import instead of public path
 import "../styles/StudentDashboard.css";
+import { toast } from "react-toastify";
+
 
 const StudentDashboard = () => {
   const location = useLocation();
@@ -15,7 +17,7 @@ const StudentDashboard = () => {
   const handleReturnBook = async (bookId) => {
     const token = localStorage.getItem("token");
     if (!token || !bookId) {
-      alert("Invalid book ID or missing token.");
+      toast.error("Invalid book ID or missing token.");
       return;
     }
 
@@ -29,10 +31,10 @@ const StudentDashboard = () => {
       setBorrowedBooks((prev) =>
         prev.filter((book) => book.id !== bookId)
       );
-      alert("Book returned successfully!");
+      toast.success("✅ Book returned successfully!");
     } catch (err) {
       console.error("Error returning book:", err.response?.data || err.message);
-      alert("Failed to return book.");
+      toast.error("❌ Failed to return book.");
     }
   };
 

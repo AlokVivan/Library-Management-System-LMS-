@@ -23,9 +23,14 @@ const getUserProfile = async (req, res) => {
     }
 
     res.json({
-      ...user,
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      borrow_limit: user.book_limit, // 👈 Ye line important hai
       borrowed_books_count: borrowedCount,
     });
+    
   } catch (err) {
     console.error("Error fetching user profile:", err);
     res.status(500).json({ error: "Server error" });

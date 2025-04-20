@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./LibraryPage.css";
 import api from "../../services/api"; // path adjust kar lena agar alag structure ho
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LibraryPage = () => {
   const [availableBooks, setAvailableBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [confirmBorrow, setConfirmBorrow] = useState(null);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchAvailableBooks();
@@ -18,6 +19,7 @@ const LibraryPage = () => {
       setAvailableBooks(res.data.books);
     } catch (error) {
       console.error("Error fetching available books", error);
+      toast.error("Failed to fetch available books.");
     }
   };
 
@@ -50,16 +52,16 @@ const LibraryPage = () => {
         return_by: "2025-04-30", // You can make this dynamic later
       });
 
-      setMessage(`✅ Successfully borrowed: ${confirmBorrow.title}`);
+      toast.success(`✅ Borrowed: ${confirmBorrow.title}`);
       setConfirmBorrow(null);
       fetchAvailableBooks();
     } catch (err) {
       console.error("Error borrowing book:", err);
 
       if (err.response && err.response.data && err.response.data.error) {
-        setMessage(`❌ ${err.response.data.error}`);
+        toast.error(`❌ ${err.response.data.error}`);
       } else {
-        setMessage("❌ Failed to borrow the book. Please login again if issue persists.");
+        toast.error("❌ Failed to borrow the book. Please login again if issue persists.");
       }
     }
   };
@@ -83,8 +85,6 @@ const LibraryPage = () => {
           🔍 Search
         </button>
       </div>
-
-      {message && <div className="library-message">{message}</div>}
 
       <div className="library-catalog">
         {availableBooks.map((book) => (
