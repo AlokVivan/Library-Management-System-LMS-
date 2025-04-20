@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import "../styles/AdminDashboard.css";
 import api from "../services/api"; // ✅ Axios instance
+import LogoSpinner from "../components/LogoSpinner"; // ✅ Spinner component
 
 const AdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -92,7 +93,9 @@ const AdminDashboard = () => {
 
         {/* 🔄 Nested Route Rendering with context */}
         {!dashboardData ? (
-          <p style={{ padding: "1rem" }}>Loading dashboard data...</p>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "calc(100vh - 80px)" }}>
+            <LogoSpinner size={100} />
+          </div>
         ) : (
           <Outlet context={{ dashboardData }} />
         )}

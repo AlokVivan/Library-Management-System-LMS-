@@ -1,0 +1,31 @@
+/* LogoSpinner.css */
+
+.logo-spinner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* or 100% if inside a section */
+    width: 100%;
+    background-color: transparent;
+  }
+  
+  .logo-spinner {
+    border-radius: 50%;
+    border: 5px solid var(--accent);
+    animation: spin 1.3s linear infinite;
+    object-fit: cover;
+    width: 120px;
+    height: 120px;
+  }
+  
+  /* Animation */
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+  
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
