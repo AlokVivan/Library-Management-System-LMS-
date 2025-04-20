@@ -14,7 +14,10 @@ const StudentDashboard = () => {
 
   const handleReturnBook = async (bookId) => {
     const token = localStorage.getItem("token");
-    if (!token) return;
+    if (!token || !bookId) {
+      alert("Invalid book ID or missing token.");
+      return;
+    }
 
     if (!window.confirm("Are you sure you want to return this book?")) return;
 
@@ -24,7 +27,7 @@ const StudentDashboard = () => {
       });
 
       setBorrowedBooks((prev) =>
-        prev.filter((book) => book.book_id !== bookId)
+        prev.filter((book) => book.id !== bookId)
       );
       alert("Book returned successfully!");
     } catch (err) {
@@ -153,7 +156,7 @@ const StudentDashboard = () => {
                         </td>
                         <td>
                           <button
-                            onClick={() => handleReturnBook(book.book_id)}
+                            onClick={() => handleReturnBook(book.id)}
                             className="return-btn"
                           >
                             Return
