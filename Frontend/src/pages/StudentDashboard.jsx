@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
 import { LayoutDashboard, User, LogOut, Book } from "lucide-react";
 import api from "../services/api"; // Axios instance
-import profilePic from "../assets/alokpicture.jpg"; // ✅ Use import instead of public path
 import "../styles/StudentDashboard.css";
 import { toast } from "react-toastify";
 
@@ -69,7 +68,7 @@ const StudentDashboard = () => {
       {/* Sidebar */}
       <aside className="sidebar">
         <div className="logo">
-          <img src="/logo.png" alt="Logo" className="logo-img" />
+          <img src="logo.png" alt="Logo" className="logo-img" />
         </div>
         <nav>
           <NavLink to="/student-dashboard" end className={({ isActive }) => (isActive ? "active" : "")}>
@@ -100,7 +99,7 @@ const StudentDashboard = () => {
           <div className="admin-profile">
             <span>{studentProfile?.name || "Student"}</span>
             <img
-              src={profilePic}
+              src="alokpicture.jpg"
               alt="Student"
               className="profile-pic"
             />

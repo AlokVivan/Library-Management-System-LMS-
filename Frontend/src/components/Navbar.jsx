@@ -13,7 +13,7 @@ export default function Navbar() {
   return (
     <nav style={styles.navbar}>
       <div style={styles.logo}>
-        <img src="src/assets/logo.png" alt="Bookify Logo" style={styles.logoImage} />
+        <img src="logo.png" alt="Bookify Logo" style={styles.logoImage} />
       </div>
       <ul style={styles.menu}>
         {menuItems.map((item) => (

@@ -201,7 +201,7 @@ export default function Footer() {
           {/* Logo + Description */}
           <div className="footer-section">
             <img
-              src="src/assets/footerlogo.png"
+              src="footerlogo.png"
               alt="Bookify Logo"
               className="footer-logo"
             />

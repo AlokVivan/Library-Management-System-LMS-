@@ -32,13 +32,20 @@ const ManageBooks = () => {
     fetchBooks();
   }, []);
 
-  // ✅ Add / Update book
+  // ✅ Add / Update book with negative quantity check
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const quantityNumber = parseInt(form.quantity, 10);
+
+    if (isNaN(quantityNumber) || quantityNumber < 0) {
+      toast.error("Quantity cannot be negative.");
+      return;
+    }
+
     const payload = {
       ...form,
-      quantity: parseInt(form.quantity, 10),
+      quantity: quantityNumber,
     };
 
     try {
@@ -131,6 +138,7 @@ const ManageBooks = () => {
           value={form.quantity}
           onChange={(e) => setForm({ ...form, quantity: e.target.value })}
           required
+          min="0"
         />
 
         <div className="form-actions">

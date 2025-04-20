@@ -31,7 +31,7 @@ const AdminDashboard = () => {
     <div className="admin-dashboard ui-redesign">
       <aside className="sidebar">
         <div className="logo">
-          <img src="/assets/logo.png" alt="Logo" className="logo-img" /> {/* ✅ Use public path */}
+          <img src="logo.png" alt="Logo" className="logo-img" /> {/* ✅ Use public path */}
         </div>
         <nav>
           <NavLink
@@ -83,7 +83,7 @@ const AdminDashboard = () => {
           <div className="admin-profile">
             <span>Admin</span>
             <img
-              src="/assets/alokpicture.jpg" // ✅ Corrected image path
+              src="alokpicture.jpg" // ✅ Corrected image path
               alt="Admin"
               className="profile-pic"
             />
