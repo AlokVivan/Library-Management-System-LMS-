@@ -139,3 +139,34 @@ exports.forgotPassword = async (req, res) => {
     res.status(500).json({ error: 'Failed to send reset email' });
   }
 };
+
+// ✅ RESET PASSWORD
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.status(400).json({ error: 'Token and new password are required' });
+    }
+
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Update password in DB
+    await db.query('UPDATE users SET password = $1 WHERE id = $2', [
+      hashedPassword,
+      decoded.id,
+    ]);
+
+    res.status(200).json({ message: 'Password reset successful' });
+  } catch (error) {
+    console.error('Reset Password Error:', error.message);
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: 'Reset link has expired. Please try again.' });
+    }
+    return res.status(500).json({ error: 'Something went wrong. Please try again later.' });
+  }
+};
