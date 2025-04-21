@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "../styles/Login.css"; // Reusing your existing style
+import api from "../services/api";
+import "../styles/Login.css";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -20,21 +21,16 @@ const ResetPassword = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, password }),
+      // ✅ Axios API call using centralized instance
+      const res = await api.post("/auth/reset-password", {
+        token,
+        password,
       });
 
-      const data = await res.json();
-      if (res.ok) {
-        setMessage("Password reset successful. Redirecting to login...");
-        setTimeout(() => navigate("/login"), 2000);
-      } else {
-        setMessage(data.error || "Something went wrong.");
-      }
+      setMessage("Password reset successful. Redirecting to login...");
+      setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
-      setMessage("Server error.");
+      setMessage(error.response?.data?.error || "Server error.");
     } finally {
       setLoading(false);
     }
