@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import "../styles/Login.css";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -37,6 +39,8 @@ const ResetPassword = () => {
   };
 
   return (
+    <>
+          <Navbar />
     <section className="login-section">
       <div className="form-box">
         <div className="form-value">
@@ -81,6 +85,8 @@ const ResetPassword = () => {
         </div>
       </div>
     </section>
+          <Footer />
+    </>
   );
 };
 
