@@ -14,6 +14,10 @@ import ForgotPassword from "./pages/ForgotPassword";
 import AboutUs from "./pages/AboutUs";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ResetPasswordForm from "./pages/ResetPasswordForm";
+
+
+
 
 function App() {
   useEffect(() => {
@@ -27,6 +31,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordForm />} />
         <Route path="/about-us" element={<AboutUs />} />
 
         {/* ✅ Student Routes */}
