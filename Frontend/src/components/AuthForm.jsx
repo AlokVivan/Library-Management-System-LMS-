@@ -128,9 +128,8 @@ const AuthForm = ({ redirectAfterLogin = true }) => {
                 <label>
                   <input type="checkbox" /> Remember Me
                 </label>
-                <a href="#">Forgot Password?</a>
+                <a href="#" onClick={() => navigate("/forgot-password")}>  Forgot Password?</a>
               </div>
-  
               <button type="submit" className="auth-button">
                 {isLogin ? "Log in" : "Register"}
               </button>

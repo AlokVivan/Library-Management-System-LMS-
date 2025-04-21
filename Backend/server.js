@@ -4,6 +4,10 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const { connectDB } = require("./config/db");
 
+const emailRoutes = require("./routes/emailRoutes");
+
+
+
 // Initialize environment variables
 dotenv.config();
 const app = express();
@@ -43,6 +47,8 @@ app.use("/api/books", require("./routes/bookRoutes"));
 app.use("/api/borrowed", require("./routes/borrowRoutes"));
 app.use("/api/dashboard", require("./routes/dashboardRoutes"));
 app.use("/api/contact", require("./routes/contactRoutes"));
+app.use("/api/email", emailRoutes);
+
 
 // ✅ Health check
 app.get("/", (req, res) => {

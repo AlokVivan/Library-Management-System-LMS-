@@ -10,6 +10,7 @@ import ManageBooks from "./pages/admin/ManageBooks";
 import ManageUsers from "./pages/admin/ManageUsers";
 import AccountPage from "./pages/student/AccountPage";
 import LibraryPage from "./pages/student/LibraryPage";
+import ForgotPassword from "./pages/ForgotPassword";
 import AboutUs from "./pages/AboutUs";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -25,6 +26,7 @@ function App() {
         {/* ✅ Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/about-us" element={<AboutUs />} />
 
         {/* ✅ Student Routes */}
