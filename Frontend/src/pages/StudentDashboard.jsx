@@ -12,7 +12,8 @@ const StudentDashboard = () => {
   const [studentProfile, setStudentProfile] = useState({});
   const [limitReached, setLimitReached] = useState(false);
   const [bookLimit, setBookLimit] = useState(0);
-  const [loading, setLoading] = useState(true); // ✅ Spinner control
+  const [loading, setLoading] = useState(true); // ✅ Initial API loading
+  const [loadingRoute, setLoadingRoute] = useState(false); // ✅ Spinner for route changes
 
   const handleReturnBook = async (bookId) => {
     const token = localStorage.getItem("token");
@@ -59,27 +60,32 @@ const StudentDashboard = () => {
       } catch (err) {
         console.error("Error fetching dashboard data", err.response?.data || err.message);
       } finally {
-        setLoading(false); // ✅ End spinner
+        setLoading(false); // ✅ API loading complete
       }
     };
 
     fetchData();
   }, []);
 
-  if (loading) {
+  // ✅ Spinner during route transition
+  useEffect(() => {
+    setLoadingRoute(true);
+    const timeout = setTimeout(() => setLoadingRoute(false), 400);
+    return () => clearTimeout(timeout);
+  }, [location.pathname]);
+
+  if (loading || loadingRoute) {
     return (
       <div
-  style={{
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  }}
->
-  <LogoSpinner size={100} />
-</div>
-
-
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
+        <LogoSpinner size={100} />
+      </div>
     );
   }
 

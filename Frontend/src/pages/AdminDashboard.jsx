@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   BarChart3,
   Users,
@@ -14,6 +14,8 @@ import LogoSpinner from "../components/LogoSpinner"; // ✅ Spinner component
 
 const AdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
+  const [loadingRoute, setLoadingRoute] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -28,11 +30,18 @@ const AdminDashboard = () => {
     fetchDashboard();
   }, []);
 
+  // ✅ Spinner on every route change inside admin
+  useEffect(() => {
+    setLoadingRoute(true);
+    const timeout = setTimeout(() => setLoadingRoute(false), 400); // spinner delay
+    return () => clearTimeout(timeout);
+  }, [location.pathname]);
+
   return (
     <div className="admin-dashboard ui-redesign">
       <aside className="sidebar">
         <div className="logo">
-          <img src="logo.png" alt="Logo" className="logo-img" /> {/* ✅ Use public path */}
+          <img src="logo.png" alt="Logo" className="logo-img" />
         </div>
         <nav>
           <NavLink
@@ -84,16 +93,23 @@ const AdminDashboard = () => {
           <div className="admin-profile">
             <span>Admin</span>
             <img
-              src="alokpicture.jpg" // ✅ Corrected image path
+              src="alokpicture.jpg"
               alt="Admin"
               className="profile-pic"
             />
           </div>
         </header>
 
-        {/* 🔄 Nested Route Rendering with context */}
-        {!dashboardData ? (
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "calc(100vh - 80px)" }}>
+        {/* ✅ Spinner logic */}
+        {!dashboardData || loadingRoute ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "calc(100vh - 80px)",
+            }}
+          >
             <LogoSpinner size={100} />
           </div>
         ) : (
