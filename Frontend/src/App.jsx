@@ -15,6 +15,7 @@ import AboutUs from "./pages/AboutUs";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ResetPassword from "./pages/ResetPassword";
+import { Analytics } from '@vercel/analytics/react';
 
 
 
@@ -52,6 +53,8 @@ function App() {
       </Routes>
 
       <ToastContainer position="top-right" autoClose={3000} />
+      <Analytics />
+
     </>
   );
 }
