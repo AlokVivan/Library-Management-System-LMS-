@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 const nodemailer = require('nodemailer');
+const { sendWelcomeEmail, sendApprovalEmail } = require('../utils/email');
+
 
 // ✅ REGISTER
 exports.register = async (req, res) => {
@@ -24,6 +26,9 @@ exports.register = async (req, res) => {
       'INSERT INTO users (name, email, password, role, status) VALUES ($1, $2, $3, $4, $5) RETURNING *',
       [name, email, hashedPassword, role, 'pending']
     );
+
+    // Send Welcome Email
+    await sendWelcomeEmail(newUser.rows[0].email, newUser.rows[0].name);
 
     const token = jwt.sign({ id: newUser.rows[0].id }, process.env.JWT_SECRET, {
       expiresIn: '1d',
@@ -168,5 +173,28 @@ exports.resetPassword = async (req, res) => {
       return res.status(401).json({ error: 'Reset link has expired. Please try again.' });
     }
     return res.status(500).json({ error: 'Something went wrong. Please try again later.' });
+  }
+};
+
+// ✅ APPROVE USER (Admin)
+exports.approveUser = async (req, res) => {
+  try {
+    const { userId } = req.params; // Assume admin provides userId to approve
+
+    const user = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
+    if (user.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update user status to 'approved'
+    await db.query('UPDATE users SET status = $1 WHERE id = $2', ['approved', userId]);
+
+    // Send approval email
+    await sendApprovalEmail(user.rows[0].email, user.rows[0].name);
+
+    res.status(200).json({ message: 'User approved and email sent' });
+  } catch (error) {
+    console.error('Approve User Error:', error.message);
+    res.status(500).json({ error: 'Failed to approve user' });
   }
 };
